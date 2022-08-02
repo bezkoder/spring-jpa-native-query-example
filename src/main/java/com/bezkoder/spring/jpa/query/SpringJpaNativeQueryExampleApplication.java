@@ -117,6 +117,15 @@ public class SpringJpaNativeQueryExampleApplication implements CommandLineRunner
     tutorials = tutorialRepository.findAllWithPagination(pageable).getContent();
     show(tutorials);
 
+    pageable = PageRequest.of(0, 3);
+
+    tutorials = tutorialRepository.findByTitleLike("ring", pageable).getContent();
+    show(tutorials);
+
+    pageable = PageRequest.of(page, size, Sort.by("level").descending());
+
+    tutorials = tutorialRepository.findByPublished(false, pageable).getContent();
+    show(tutorials);
   }
 
   private void show(List<Tutorial> tutorials) {
