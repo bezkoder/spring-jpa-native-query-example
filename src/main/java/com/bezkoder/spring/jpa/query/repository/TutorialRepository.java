@@ -41,6 +41,12 @@ public interface TutorialRepository extends JpaRepository<Tutorial, Long> {
   @Query(value = "SELECT * FROM tutorials t WHERE t.published=:isPublished AND t.level BETWEEN :start AND :end", nativeQuery = true)
   List<Tutorial> findByLevelBetween(@Param("start") int start, @Param("end") int end, @Param("isPublished") boolean isPublished);
 
+  @Query(value = "SELECT * FROM tutorials t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword,'%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%', :keyword,'%'))", nativeQuery = true)
+  List<Tutorial> findByTitleContainingOrDescriptionContainingCaseInsensitive(String keyword);
+
+  @Query(value = "SELECT * FROM tutorials t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :title,'%')) AND t.published=:isPublished", nativeQuery = true)
+  List<Tutorial> findByTitleContainingCaseInsensitiveAndPublished(String title, boolean isPublished);
+
   @Transactional
   @Modifying
   @Query(value = "UPDATE tutorials SET published=true WHERE id=?1", nativeQuery = true)
